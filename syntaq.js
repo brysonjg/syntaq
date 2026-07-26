@@ -155,11 +155,11 @@ class syntaq {
 
             outputJson.contexts[contextName].rules = [];
 
-            for (let element of context.children) {
-                const ruleType = element.tagName;
+            for (let rule of context.children) {
+                const ruleType = rule.tagName;
                 let attributes = {};
 
-                for (let attribute of element.attributes) {
+                for (let attribute of rule.attributes) {
                     attributes[attribute.name] = attribute.value;
                 }
 

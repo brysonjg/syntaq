@@ -1,0 +1,8 @@
+*.swp
+*.kate-swp
+
+.DS_Store
+.directory
+
+.vscode
+.cursor
