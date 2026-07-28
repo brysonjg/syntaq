@@ -114,6 +114,33 @@ class syntaq {
 `
     }
 
+    static resolveIncludes(contexts, name, resolving) {
+        if (resolving.has(name)) {
+            throw new Error(`this definistion has a IncludeRules cycle.`);
+        }
+
+        resolving.add(name);
+
+        const output = [];
+
+        for (const rule of contexts[name].rules) {
+
+            if (rule.type === "IncludeRules") {
+                output.push(
+                    ...this.resolveIncludes(contexts, rule.context, resolving)
+                );
+            } else {
+                output.push(rule);
+            }
+        }
+
+        resolving.delete(name);
+
+        contexts[name].rules = output
+
+        return output;
+    }
+
     static grammerize(xmlText) {
         const xmlParser = new DOMParser();
         const xmlDocument = xmlParser.parseFromString(xmlText, 'text/xml');
@@ -168,6 +195,15 @@ class syntaq {
                     ...attributes
                 });
             }
+        }
+
+        // parse IncludeRules
+        for (let name of Object.keys(outputJson.contexts)) {
+            outputJson.contexts[name].rules = this.resolveIncludes(
+                outputJson.contexts,
+                name,
+                new Set(),
+            );
         }
 
         // parse itemDatas
