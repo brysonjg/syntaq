@@ -66,6 +66,7 @@ class SyntaqStateMachine {
         while (i < text.length) {
             const contextState = states[states.length - 1];
             const context = this.grammer.contexts[contextState];
+            let matchedText = false;
 
             for (const rule of context.rules) {
                 const answer = this.matchesRule(rule, text, i);
@@ -78,16 +79,21 @@ class SyntaqStateMachine {
                         type: states[states.length - 1],
                         content: answer
                     });
+
                     i += answer.length;
+                    matchedText = true;
+
                     break;
                 }
             }
 
-            tokens.push({
-                type: "Unknown",
-                content: text[i]
-            });
-            i++;
+            if (!matchedText) {
+                tokens.push({
+                    type: "Unknown",
+                    content: text[i]
+                });
+                i++;
+            }
         }
 
         return tokens;
