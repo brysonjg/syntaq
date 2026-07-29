@@ -42,16 +42,31 @@ class SyntaqStateMachine {
 
     nextStates(rule, stack) {
         stack = [...stack];
+        let context = rule.context;
 
-        if (!rule.context || rule.context === "#stay") {
+        if (!context || context === "#stay") {
             return stack;
         }
-        if (rule.context === "#pop") {
+
+        while (context.startsWith("#pop")) {
             stack.pop();
+            context = context.slice(4);
+        }
+
+        if (stack.length === 0) {
+            throw new Error("cannot pop the last element of the context stack");
+        }
+
+        if (context === "") {
             return stack;
         }
 
-        stack.push(rule.context);
+        if (!this.grammer.contexts.hasOwnProperty(context)) {
+            throw new Error("cannot switch to undefined context");
+        }
+
+        stack.push(context);
+
         return stack;
     }
 
@@ -76,7 +91,7 @@ class SyntaqStateMachine {
                 else {
                     states = this.nextStates(rule, states);
                     tokens.push({
-                        type: states[states.length - 1],
+                        type: rule.attribute,
                         content: answer
                     });
 
