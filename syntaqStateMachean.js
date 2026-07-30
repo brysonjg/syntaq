@@ -70,6 +70,25 @@ class SyntaqStateMachine {
         return stack;
     }
 
+    coaxSrtingToBool(value) {
+        if (!value) return false;
+
+        switch (value) {
+            case "1":
+                return true;
+            case "0":
+                return false;
+            case "true":
+                return true;
+            case "false":
+                return false;
+            case "":
+                return false;
+            default:
+                return true;
+        }
+    }
+
     tokenize(text) {
         const statesKeys = Object.keys(this.grammer.contexts);
 
@@ -90,6 +109,12 @@ class SyntaqStateMachine {
                 }
                 else {
                     states = this.nextStates(rule, states);
+
+                    if (this.coaxSrtingToBool(rule?.lookAhead)) {
+                        matchedText = true;
+                        continue;
+                    }
+
                     tokens.push({
                         type: rule.attribute,
                         content: answer

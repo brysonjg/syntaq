@@ -112,7 +112,7 @@ class syntaq {
 -->
 
 `
-    }
+    };
 
     static resolveIncludes(contexts, name, resolving) {
         if (resolving.has(name)) {
