@@ -103,8 +103,13 @@ class SyntaqStateMachine {
             }
 
             if (!matchedText) {
+                let contextAttribute = context?.attribute;
+                if (!contextAttribute) {
+                    contextAttribute = "Unknown";
+                }
+
                 tokens.push({
-                    type: "Unknown",
+                    type: contextAttribute,
                     content: text[i]
                 });
                 i++;
