@@ -49,6 +49,12 @@ class SyntaqStateMachine {
         }
 
         while (context.startsWith("#pop")) {
+            if (context.startsWith("#pop!")) {
+                stack.pop();
+                context = context.slice(5);
+                break;
+            }
+
             stack.pop();
             context = context.slice(4);
         }
