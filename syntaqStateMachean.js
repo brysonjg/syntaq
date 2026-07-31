@@ -73,20 +73,13 @@ class SyntaqStateMachine {
     coaxSrtingToBool(value) {
         if (!value) return false;
 
-        switch (value) {
-            case "1":
-                return true;
-            case "0":
-                return false;
-            case "true":
-                return true;
-            case "false":
-                return false;
-            case "":
-                return false;
-            default:
-                return true;
-        }
+        const trueValues = ["1", "true"];
+        if (trueValues.includes(value)) return true;
+
+        const falseValues = ["0", "false"];
+        if (falseValues.includes(value)) return false;
+
+        return false;
     }
 
     tokenize(text) {
