@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Syntaq Test</title>
+        <style>
+            body, html {
+                font-family: monospace;
+                font-size: 20px;
+                width: 100vw;
+                height: 100vh;
+                padding: 0;
+                margin: 0;
+                background-color: #1e1e1e;
+            }
+
+            pre {
+                width: 100%;
+                height: 100%;
+                padding: 0;
+                margin: 0;
+            }
+
+            span.token {
+                color: white;
+            }
+
+            span.token[type="dsFunction"] {
+                color: blueviolet;
+            }
+
+            span.token[type="dsOthers"] {
+                color: limegreen;
+            }
+
+            span.token[type"dsVariable"] {
+                color: green;
+            }
+
+            span.token[type="dsFloat"],
+            span.token[type="dsDecVal"] {
+                color: orange;
+            }
+
+            span.token[type="dsKeyword"] {
+                color: white;
+                font-style: bold;
+            }
+
+            span.token[type="dsDataType"] {
+                color: dodgerblue;
+            }
+
+            span.token[type="dsString"] {
+                color: crimson;
+            }
+
+            span.token[type="dsChar"] {
+                color: aqua;
+            }
+
+            span.token[type="dsError"] {
+                color: red;
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <body>
+
+        <pre></pre>
+
+        <script src="../syntaqStateMachean.js" defer></script>
+        <script src="../syntaq.js" defer></script>
+        <script src="../language/json.js" defer></script>
+        <script src="../language/diff.js" defer></script>
+        <script src="./test.js" defer></script>
+        <script defer>
+            window.addEventListener("DOMContentLoaded", () => {
+                const syntax = syntaq.tokenize(text, language);
+                const pre = document.querySelector("pre");
+                const grammar = syntaq.grammerize(syntaq.languages[language]);
+                const itemDatas = grammar.itemDatas;
+
+                console.log(syntax)
+
+                syntax.forEach((token) => {
+                    const span = document.createElement("span");
+                    span.classList.add("token");
+
+                    const toktype = token.type;
+                    const colortype = itemDatas[toktype].defStyleNum;
+
+                    span.setAttribute("type", colortype);
+                    span.textContent = token.content
+                    pre.appendChild(span)
+                });
+            });
+        </script>
+    </body>
+</html>
