@@ -13,11 +13,30 @@ class SyntaqStateMachine {
                 }
                 return false;
 
+            case "Detect2Chars":
+                if (text[0] === rule.char && text[1] === rule.char1) {
+                    return rule.char +  rule.char1;
+                }
+                return false;
+
             case "DetectSpaces":
                 const spaceRegexp = /^[ \t\r\n]+/;
                 const match = spaceRegexp.exec(text);
                 if (match) {
                     return match[0];
+                }
+                return false;
+
+            case "StringDetect":
+                if (text.startsWith(rule.String)) {
+                    return rule.String;
+                }
+                return false;
+
+            case "AnyChar":
+                const chars = rule.String.split("");
+                if (chars.includes(text[0])) {
+                    return text[0];
                 }
                 return false;
 
