@@ -78,10 +78,10 @@
             window.addEventListener("DOMContentLoaded", () => {
                 const syntax = syntaq.tokenize(text, language);
                 const pre = document.querySelector("pre");
-                const grammar = syntaq.grammerize(syntaq.languages[language]);
+                const grammar = syntaq.grammarize(syntaq.languages[language]);
                 const itemDatas = grammar.itemDatas;
 
-                console.log(syntax)
+                console.log(syntax);
 
                 syntax.forEach((token) => {
                     const span = document.createElement("span");

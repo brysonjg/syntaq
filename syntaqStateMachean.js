@@ -1,6 +1,6 @@
 class SyntaqStateMachine {
-    constructor(grammer) {
-        this.grammer = grammer;
+    constructor(grammar) {
+        this.grammar = grammar;
     }
 
     matchesRule(rule, text, position) {
@@ -79,15 +79,15 @@ class SyntaqStateMachine {
         }
 
         if (stack.length === 0) {
-            throw new Error("cannot pop the last element of the context stack");
+            throw new Error("Cannot pop the last element of the context stack");
         }
 
         if (context === "") {
             return stack;
         }
 
-        if (!this.grammer.contexts.hasOwnProperty(context)) {
-            throw new Error("cannot switch to undefined context");
+        if (!this.grammar.contexts.hasOwnProperty(context)) {
+            throw new Error("Cannot switch to undefined context");
         }
 
         stack.push(context);
@@ -108,7 +108,7 @@ class SyntaqStateMachine {
     }
 
     tokenize(text) {
-        const statesKeys = Object.keys(this.grammer.contexts);
+        const statesKeys = Object.keys(this.grammar.contexts);
 
         let states = [statesKeys[0]];
         let tokens = [];
@@ -117,7 +117,7 @@ class SyntaqStateMachine {
 
         while (i < text.length) {
             const contextState = states[states.length - 1];
-            const context = this.grammer.contexts[contextState];
+            const context = this.grammar.contexts[contextState];
             let matchedText = false;
 
             for (const rule of context.rules) {

@@ -3,7 +3,7 @@ class syntaq {
 
     static resolveIncludes(contexts, name, resolving) {
         if (resolving.has(name)) {
-            throw new Error(`this definistion has a IncludeRules cycle.`);
+            throw new Error(`This definistion has a IncludeRules cycle.`);
         }
 
         resolving.add(name);
@@ -28,7 +28,7 @@ class syntaq {
         return output;
     }
 
-    static grammerize(xmlText) {
+    static grammarize(xmlText) {
         const xmlParser = new DOMParser();
         const xmlDocument = xmlParser.parseFromString(xmlText, 'text/xml');
         const highlighting = xmlDocument.querySelector("highlighting");
@@ -114,9 +114,9 @@ class syntaq {
 
     static tokenize(text, language) {
         const xmlText = this.languages[language];
-        const grammer = this.grammerize(xmlText);
+        const grammar = this.grammarize(xmlText);
 
-        const stateMachean = new SyntaqStateMachine(grammer);
+        const stateMachean = new SyntaqStateMachine(grammar);
         const tokens = stateMachean.tokenize(text);
 
         return tokens;
