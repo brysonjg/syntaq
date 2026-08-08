@@ -6,57 +6,24 @@ class SyntaqStateMachine {
     matchesRule(rule, text, position) {
         text = text.slice(position);
 
-        switch (rule.type) {
-            case "DetectChar":
-                if (text[0] === rule.char) {
-                    return rule.char;
-                }
-                return false;
-
-            case "Detect2Chars":
-                if (text[0] === rule.char && text[1] === rule.char1) {
-                    return rule.char +  rule.char1;
-                }
-                return false;
-
-            case "DetectSpaces":
-                const spaceRegexp = /^[ \t\r\n]+/;
-                const match = spaceRegexp.exec(text);
-                if (match) {
-                    return match[0];
-                }
-                return false;
-
-            case "StringDetect":
-                if (text.startsWith(rule.String)) {
-                    return rule.String;
-                }
-                return false;
-
-            case "AnyChar":
-                const chars = rule.String.split("");
-                if (chars.includes(text[0])) {
-                    return text[0];
-                }
-                return false;
-
-            case "keyword":
-                const words = this.grammer.lists[rule.String];
-                for (const word of words) {
-                    if (text.startsWith(word)) {
-                        return word;
-                    }
-                }
-                return false;
-
-            case "RegExpr":
-                const regexp = new RegExp("^" + rule.String);
-                const matches = regexp.exec(text);
-                if (matches) {
-                    return matches[0];
-                }
-                return false;
+        if (!Object.hasOwn(syntaqRules, rule.type)) {
+            throw new Error("Cannot execute rule which is not defined in syntaqRules");
         }
+
+        const ruleHandler = syntaqRules[rule.type];
+        const ruleContext = {
+            rule,
+            text,
+            position,
+            grammar: {
+                lists: this.grammar.lists,
+            }
+        };
+
+        const result = ruleHandler.call(ruleContext);
+
+        if (!result) return false;
+        return result;
     }
 
     nextStates(rule, stack) {
