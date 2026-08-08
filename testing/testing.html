@@ -7,7 +7,7 @@
         <style>
             body, html {
                 font-family: monospace;
-                font-size: 20px;
+                font-size: 15px;
                 width: 100vw;
                 height: 100vh;
                 padding: 0;
@@ -26,42 +26,11 @@
                 color: white;
             }
 
-            span.token[type="dsFunction"] {
-                color: blueviolet;
+            span.token.bold {
+                font-weight: bold;
             }
 
-            span.token[type="dsOthers"] {
-                color: limegreen;
-            }
-
-            span.token[type"dsVariable"] {
-                color: green;
-            }
-
-            span.token[type="dsFloat"],
-            span.token[type="dsDecVal"] {
-                color: orange;
-            }
-
-            span.token[type="dsKeyword"] {
-                color: white;
-                font-style: bold;
-            }
-
-            span.token[type="dsDataType"] {
-                color: dodgerblue;
-            }
-
-            span.token[type="dsString"] {
-                color: crimson;
-            }
-
-            span.token[type="dsChar"] {
-                color: aqua;
-            }
-
-            span.token[type="dsError"] {
-                color: red;
+            span.token.underline {
                 text-decoration: underline;
             }
         </style>
@@ -74,24 +43,32 @@
         <script src="../syntaqStateMachean.js" defer></script>
         <script src="../syntaq.js" defer></script>
         <script src="../language/json.js" defer></script>
+        <script src="./styles.js" defer></script>
         <script src="./test.js" defer></script>
         <script defer>
             window.addEventListener("DOMContentLoaded", () => {
                 const syntax = syntaq.tokenize(text, language);
                 const pre = document.querySelector("pre");
+
                 const grammar = syntaq.grammarize(syntaq.languages[language]);
                 const itemDatas = grammar.itemDatas;
-
-                console.log(syntax);
 
                 syntax.forEach((token) => {
                     const span = document.createElement("span");
                     span.classList.add("token");
 
-                    const toktype = token.type;
-                    const colortype = itemDatas[toktype].defStyleNum;
+                    const tokenData = itemDatas[token.type];
+                    const styleName = tokenData.defStyleNum;
 
-                    span.setAttribute("type", colortype);
+                    if (!styleName) {
+                        throw new Error(`Token type "${token.type}" has no defStyleNum`);
+                    }
+
+                    const style = styles[styleName];
+                    span.style.color = style.color;
+                    if (style.bold) span.classList.add("bold");
+                    if (style.underline) span.classList.add("underline");
+
                     span.textContent = token.content;
                     pre.appendChild(span);
                 });

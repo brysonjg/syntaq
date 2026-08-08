@@ -53,7 +53,7 @@ class SyntaqStateMachine {
             return stack;
         }
 
-        if (!this.grammar.contexts.hasOwnProperty(context)) {
+        if (!Object.hasOwn(this.grammar.contexts, context)) {
             throw new Error("Cannot switch to undefined context");
         }
 
