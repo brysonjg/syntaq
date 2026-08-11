@@ -6,13 +6,13 @@
         <title>Syntaq Test</title>
         <style>
             body, html {
-                font-family: monospace;
-                font-size: 15px;
                 width: 100vw;
                 height: 100vh;
                 padding: 0;
                 margin: 0;
                 background-color: #1e1e1e;
+                font-family: monospace;
+                font-size: 15px;
             }
 
             pre {
@@ -42,13 +42,16 @@
         <script src="../syntaqRules.js" defer></script>
         <script src="../syntaqStateMachean.js" defer></script>
         <script src="../syntaq.js" defer></script>
+
         <script src="../language/json.js" defer></script>
-        <script src="./styles.js" defer></script>
-        <script src="./test.js" defer></script>
+
+        <script src="./colorData.js" defer></script>
+        <script src="./testData.js" defer></script>
         <script defer>
             window.addEventListener("DOMContentLoaded", () => {
-                const syntax = syntaq.tokenize(text, language);
                 const pre = document.querySelector("pre");
+
+                const syntax = syntaq.tokenize(text, language);
 
                 const grammar = syntaq.grammarize(syntaq.languages[language]);
                 const itemDatas = grammar.itemDatas;
@@ -58,18 +61,24 @@
                     span.classList.add("token");
 
                     const tokenData = itemDatas[token.type];
-                    const styleName = tokenData.defStyleNum;
+                    const tokenType = tokenData.defStyleNum;
 
-                    if (!styleName) {
+                    if (!tokenType) {
                         throw new Error(`Token type "${token.type}" has no defStyleNum`);
                     }
 
-                    const style = styles[styleName];
-                    span.style.color = style.color;
-                    if (style.bold) span.classList.add("bold");
-                    if (style.underline) span.classList.add("underline");
+                    const styleData = typeColors[tokenType];
+
+                    if (!styleData) {
+                        throw new Error(`Token type "${tokenType}" has no attribute in typeColors`);
+                    }
+
+                    span.style.color = styleData.color;
+                    if (styleData.bold) span.classList.add("bold");
+                    if (styleData.underline) span.classList.add("underline");
 
                     span.textContent = token.content;
+
                     pre.appendChild(span);
                 });
             });

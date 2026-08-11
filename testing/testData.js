@@ -1,4 +1,6 @@
-const text = `{
+this.language = "json";
+
+this.text = `{
     "name": "Syntax Test",
     "version": 1.2,
     "enabled": true,
@@ -18,5 +20,3 @@ const text = `{
     "unicode": "😀 π こんにちは",
     "missingEnd": { "a": 1e, "b": 2}
 }`;
-
-const language = "json";

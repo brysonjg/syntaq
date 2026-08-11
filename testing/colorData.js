@@ -1,4 +1,4 @@
-const styles = {
+this.typeColors = {
     dsNormal: {color: "white"},
     dsFunction: {color: "blueviolet"},
     dsOthers: {color: "limegreen"},
