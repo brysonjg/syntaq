@@ -4,17 +4,18 @@ class SyntaqStateMachine {
     }
 
     matchesRule(rule, text, position) {
-        text = text.slice(position);
-
         if (!Object.hasOwn(syntaqRules, rule.type)) {
             throw new Error("Cannot execute rule which is not defined in syntaqRules");
         }
 
         const ruleHandler = syntaqRules[rule.type];
         const ruleContext = {
-            rule,
-            text,
-            position,
+            rule: rule,
+            position: position,
+
+            source: text,
+            text: text.slice(position),
+
             grammar: {
                 lists: this.grammar.lists,
             }
