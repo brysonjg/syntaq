@@ -29,7 +29,7 @@ const syntaqRules = {
     AnyChar() {
         const chars = this.rule.String.split("");
 
-        if (this.rule.chars.includes(this.text[0])) {
+        if (this.rule.String.includes(this.text[0])) {
             return this.text[0];
         }
     },
