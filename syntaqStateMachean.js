@@ -12,10 +12,8 @@ class SyntaqStateMachine {
         const ruleContext = {
             rule: rule,
             position: position,
-
             source: text,
             text: text.slice(position),
-
             grammar: {
                 lists: this.grammar.lists,
             }
@@ -27,22 +25,21 @@ class SyntaqStateMachine {
         return result;
     }
 
-    nextStates(rule, stack) {
+    nextStates(context, stack) {
         stack = [...stack];
-        let context = rule.context;
 
         if (!context || context === "#stay") {
             return stack;
         }
 
         while (context.startsWith("#pop")) {
+            stack.pop();
+
             if (context.startsWith("#pop!")) {
-                stack.pop();
                 context = context.slice(5);
                 break;
             }
 
-            stack.pop();
             context = context.slice(4);
         }
 
@@ -63,7 +60,7 @@ class SyntaqStateMachine {
         return stack;
     }
 
-    coaxSrtingToBool(value) {
+    parseBoolean(value) {
         if (!value) return false;
 
         const trueValues = ["1", "true"];
@@ -76,54 +73,46 @@ class SyntaqStateMachine {
     }
 
     tokenize(text) {
-        const statesKeys = Object.keys(this.grammar.contexts);
+        const contextNames = Object.keys(this.grammar.contexts);
+        let states = [contextNames[0]];
 
-        let states = [statesKeys[0]];
         let tokens = [];
+        let index = 0;
 
-        let i = 0;
-
-        while (i < text.length) {
-            const contextState = states[states.length - 1];
-            const context = this.grammar.contexts[contextState];
+        while (index < text.length) {
+            const contextName = states[states.length - 1];
+            const context = this.grammar.contexts[contextName];
             let matchedText = false;
 
             for (const rule of context.rules) {
-                const answer = this.matchesRule(rule, text, i);
-                if (answer === false) {
-                    continue;
-                }
-                else {
-                    states = this.nextStates(rule, states);
+                const match = this.matchesRule(rule, text, index);
+                if (!match) continue;
 
-                    if (this.coaxSrtingToBool(rule?.lookAhead)) {
-                        matchedText = true;
-                        continue;
-                    }
+                states = this.nextStates(rule.context, states);
 
-                    tokens.push({
-                        type: rule.attribute,
-                        content: answer
-                    });
-
-                    i += answer.length;
+                if (this.parseBoolean(rule?.lookAhead)) {
                     matchedText = true;
-
-                    break;
-                }
-            }
-
-            if (!matchedText) {
-                let contextAttribute = context?.attribute;
-                if (!contextAttribute) {
-                    contextAttribute = "Unknown";
+                    continue;
                 }
 
                 tokens.push({
-                    type: contextAttribute,
-                    content: text[i]
+                    type: rule.attribute,
+                    content: match
                 });
-                i++;
+
+                index += match.length;
+                matchedText = true
+                break;
+            }
+
+            if (!matchedText) {
+                let contextAttribute = context.attribute || "Unknown";
+
+                tokens.push({
+                    type: contextAttribute,
+                    content: text[index]
+                });
+                index++;
             }
         }
 
