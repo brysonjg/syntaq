@@ -151,6 +151,12 @@ class SyntaqStateMachine {
             }
 
             if (!matchedText) {
+                const fallthrough = context.fallthroughContext;
+                if (fallthrough || fallthrough === "#stay") {
+                    states = this.nextStates(fallthrough, states);
+                    continue;
+                }
+
                 let contextAttribute = context.attribute || "Unknown";
 
                 tokens.push({
