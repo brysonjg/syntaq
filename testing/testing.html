@@ -54,24 +54,14 @@
 
                 const syntax = syntaq.tokenize(text, language);
 
-                const grammar = syntaq.grammarize(syntaq.languages[language]);
-                const itemDatas = grammar.itemDatas;
-
                 syntax.forEach((token) => {
                     const span = document.createElement("span");
                     span.classList.add("token");
 
-                    const tokenData = itemDatas[token.type];
-                    const tokenType = tokenData.defStyleNum;
-
-                    if (!tokenType) {
-                        throw new Error(`Token type "${token.type}" has no defStyleNum`);
-                    }
-
-                    const styleData = typeColors[tokenType];
+                    const styleData = typeColors[token.type];
 
                     if (!styleData) {
-                        throw new Error(`Token type "${tokenType}" has no attribute in typeColors`);
+                        throw new Error(`Token type "${token.type}" has no attribute in typeColors`);
                     }
 
                     span.style.color = styleData.color;

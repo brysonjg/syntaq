@@ -8,6 +8,10 @@ class SyntaqStateMachine {
             throw new Error("Cannot execute rule which is not defined in syntaqRules");
         }
 
+        if (rule.column) {
+            if (rule.column != position) return false;
+        }
+
         const ruleHandler = syntaqRules[rule.type];
         const ruleContext = {
             rule: rule,
@@ -111,6 +115,10 @@ class SyntaqStateMachine {
         return states;
     }
 
+    attributeToType(attribute) {
+        return this.grammar.itemDatas[attribute].defStyleNum;
+    }
+
     tokenizeLine(text, states) {
         states = [...states]
         let tokens = [];
@@ -133,7 +141,7 @@ class SyntaqStateMachine {
                 }
 
                 tokens.push({
-                    type: rule.attribute,
+                    type: this.attributeToType(rule.attribute),
                     content: match
                 });
 
@@ -146,7 +154,7 @@ class SyntaqStateMachine {
                 let contextAttribute = context.attribute || "Unknown";
 
                 tokens.push({
-                    type: contextAttribute,
+                    type: this.attributeToType(contextAttribute),
                     content: text[index]
                 });
                 index++;
@@ -168,9 +176,9 @@ class SyntaqStateMachine {
         for (const line of lines) {
             const output = this.tokenizeLine(line, states);
             states = output.states;
-            tokens.push(...output.tokens);
 
-            try{tokens[tokens.length - 1].content += "\n";}catch{}
+            tokens.push(...output.tokens);
+            tokens.push({content: "\n", type: "dsNormal"});
         }
 
         return tokens;
