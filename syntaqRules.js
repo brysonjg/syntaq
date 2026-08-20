@@ -12,7 +12,7 @@ const syntaqRules = {
     },
 
     DetectSpaces() {
-        const spaceRegexp = /^[ \t\r\n]+/;
+        const spaceRegexp = /^[ \t\r]+/;
         const match = spaceRegexp.exec(this.text);
 
         if (match) {
@@ -27,8 +27,6 @@ const syntaqRules = {
     },
 
     AnyChar() {
-        const chars = this.rule.String.split("");
-
         if (this.rule.String.includes(this.text[0])) {
             return this.text[0];
         }
