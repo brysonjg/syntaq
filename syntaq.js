@@ -11,7 +11,6 @@ class syntaq {
         const output = [];
 
         for (const rule of contexts[name].rules) {
-
             if (rule.type === "IncludeRules") {
                 output.push(
                     ...this.resolveIncludes(contexts, rule.context, resolving)

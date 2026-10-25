@@ -49,5 +49,18 @@ const syntaqRules = {
         if (matches) {
             return matches[0];
         }
+    },
+
+    Int() {
+        let location = 0;
+
+        while (location < this.text.length) {
+            const numbcode = this.text.charCodeAt(location);
+            if (numbcode > 57 || numbcode < 48) break;
+
+            location++;
+        }
+
+        return this.text.slice(0, location)
     }
 }
